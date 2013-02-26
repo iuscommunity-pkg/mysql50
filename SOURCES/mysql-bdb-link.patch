@@ -1,0 +1,31 @@
+Fix link flags, per RH bug #199368.
+
+Probably no point in filing this upstream, since MySQL AB is dropping BDB
+support; we won't need it ourselves when we move to mysql 5.1.
+
+
+diff -Naur mysql-5.0.27.orig/bdb/dist/Makefile.in mysql-5.0.27/bdb/dist/Makefile.in
+--- mysql-5.0.27.orig/bdb/dist/Makefile.in	2006-10-20 20:22:38.000000000 -0400
++++ mysql-5.0.27/bdb/dist/Makefile.in	2006-11-08 19:25:24.000000000 -0500
+@@ -52,8 +52,9 @@
+ ##################################################
+ CPPFLAGS=	-I$(builddir) -I$(srcdir) -I$(srcdir)/dbinc @CPPFLAGS@
+ CFLAGS=	 	-c $(CPPFLAGS) @CFLAGS@
++LOPTFLAGS=	$(CPPFLAGS) @CFLAGS@
+ CC=		@MAKEFILE_CC@
+-CCLINK=		@MAKEFILE_CCLINK@
++CCLINK=		@MAKEFILE_CCLINK@ $(LOPTFLAGS)
+ 
+ LDFLAGS=	@LDFLAGS@
+ LIBS=		@LIBS@
+@@ -74,8 +75,8 @@
+ ##################################################
+ CXXFLAGS=	-c $(CPPFLAGS) @CXXFLAGS@
+ CXX=		@MAKEFILE_CXX@
+-CXXLINK=	@MAKEFILE_CXXLINK@
+-XSOLINK=	@MAKEFILE_XSOLINK@
++CXXLINK=	@MAKEFILE_CXXLINK@ $(LOPTFLAGS)
++XSOLINK=	@MAKEFILE_XSOLINK@ $(LOPTFLAGS)
+ LIBXSO_LIBS=	@LIBXSO_LIBS@
+ 
+ libcxx=		libdb_cxx.a

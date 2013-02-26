@@ -1,0 +1,85 @@
+### Rackspace MySQL 4.1/5.0 Terse Configuration File v1.1
+###
+### This is a base configuration file containing the most frequently used 
+### settings with reasonably defined default values for configuring and 
+### tuning MySQL. Note that these settings can likely be further tuned 
+### in order to get optimum performance from MySQL based upon the database 
+### configuration and hardware platform.
+###
+### While the settings provided are likely sufficient for most situations, an 
+### exhaustive list of settings (with descriptions) can be found at:
+### 
+### For MySQL 4.1:
+### http://dev.mysql.com/doc/refman/4.1/en/server-system-variables.html
+### For MySQL 5.0:
+### http://dev.mysql.com/doc/refman/5.0/en/server-system-variables.html
+###
+### Further configuration file examples (with and without comments) can be
+### found in @@@mysql_server_docdir@@@.
+###
+### Take care to only add/remove/change a setting if you are comfortable
+### doing so! For Rackspace customers, if you have any questions or concerns,
+### please contact the MySQL Database Services Team. Be aware that some work
+### performed by this team can involve additional billable fees.
+
+[mysqld]
+## General
+datadir                         = /var/lib/mysql
+tmpdir                          = /var/tmp
+socket                          = /var/lib/mysql/mysql.sock
+skip-locking
+#skip-name-resolve
+
+## Misc
+default-storage-engine          = InnoDB
+sql-mode                        = TRADITIONAL
+open-files-limit                = 65535
+
+## Cache
+thread-cache-size               = 16
+table-cache                     = 2048
+query-cache-size                = 32M
+
+## Buffers
+sort-buffer-size                = 1M
+read-buffer-size                = 1M
+read-rnd-buffer-size            = 8M
+join-buffer-size                = 1M
+tmp-table-size                  = 64M
+max-heap-table-size             = 64M
+
+## Networking
+back-log                        = 100
+max-connections                 = 200
+max-connect-errors              = 10000
+max-allowed-packet              = 16M
+interactive-timeout             = 600
+wait-timeout                    = 600
+
+## MyISAM
+key-buffer-size                 = 64M
+myisam-sort-buffer-size         = 64M
+
+## InnoDB
+innodb-data-file-path           = ibdata:2G;ibdata2:10M:autoextend
+#innodb-log-file-size            = 100M
+innodb-buffer-pool-size         = 16M
+innodb-file-per-table           = 0
+innodb-open-files               = 300
+innodb-thread-concurrency       = 8
+
+## Replication
+server-id                       = 1
+log-bin                         = /var/lib/mysqllogs/bin-log
+relay-log                       = /var/lib/mysqllogs/relay-log
+#log-slave-updates
+expire-logs-days                = 7
+sync-binlog                     = 0 
+read-only                       = 0
+auto-increment-increment        = 1
+auto-increment-offset           = 1
+
+## Logging
+log-slow-queries                = /var/lib/mysqllogs/slow-log
+long-query-time                 = 2
+log-queries-not-using-indexes   

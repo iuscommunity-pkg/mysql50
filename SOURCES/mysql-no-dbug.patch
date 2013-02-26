@@ -1,0 +1,17 @@
+Don't build the dbug manual.  We aren't going to install it anyway, so
+there's no need to do so.  Attempting to build it causes crashes if one
+has built with -DDBUG_OFF, as we do by default.  Per bug #437053.
+
+
+diff -Naur mysql-5.0.51a.orig/dbug/Makefile.am mysql-5.0.51a/dbug/Makefile.am
+--- mysql-5.0.51a.orig/dbug/Makefile.am	2008-01-11 09:43:29.000000000 -0500
++++ mysql-5.0.51a/dbug/Makefile.am	2008-07-27 12:21:56.000000000 -0400
+@@ -35,7 +35,7 @@
+ factorial_SOURCES =     my_main.c factorial.c
+ dbug_analyze_SOURCES =  dbug_analyze.c
+ 
+-all:            user.t user.ps
++all:
+ 
+ user.t:         user.r $(NROFF_INC)
+ 		-nroff -mm user.r > $@

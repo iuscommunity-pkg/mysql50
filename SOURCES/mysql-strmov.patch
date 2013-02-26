@@ -1,0 +1,30 @@
+Remove overly optimistic definition of strmov() as stpcpy().
+
+mysql uses this macro with overlapping source and destination strings,
+which is verboten per spec, and fails on some Red Hat platforms.
+Deleting the definition is sufficient to make it fall back to a
+byte-at-a-time copy loop, which should consistently give the
+expected behavior.
+
+This is required to get mysql 5.0.77 to pass its regression tests on
+recent Fedora x86_64.  It might not be strictly required on RHEL-5,
+but for convenience of testing I'm going to include it anyway.
+
+
+diff -Naur mysql-5.0.77.orig/include/m_string.h mysql-5.0.77/include/m_string.h
+--- mysql-5.0.77.orig/include/m_string.h	2009-01-29 16:42:12.000000000 -0500
++++ mysql-5.0.77/include/m_string.h	2010-10-22 14:03:55.207864733 -0400
+@@ -94,13 +94,6 @@
+ extern void *(*my_str_malloc)(size_t);
+ extern void (*my_str_free)(void *);
+ 
+-#if defined(HAVE_STPCPY) && !defined(HAVE_mit_thread)
+-#define strmov(A,B) stpcpy((A),(B))
+-#ifndef stpcpy
+-extern char *stpcpy(char *, const char *);	/* For AIX with gcc 2.95.3 */
+-#endif
+-#endif
+-
+ /* Declared in int2str() */
+ extern char NEAR _dig_vec_upper[];
+ extern char NEAR _dig_vec_lower[];
